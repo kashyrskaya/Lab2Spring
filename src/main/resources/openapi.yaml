@@ -1,0 +1,112 @@
+openapi: 3.0.3
+info:
+  title: Potions API
+  version: 1.0.0
+  description: REST API for managing magical potions
+servers:
+  - url: http://localhost:8080
+    description: Local Tomcat Server
+paths:
+  /potions:
+    get:
+      summary: Get all potions
+      parameters:
+        - in: query
+          name: minPower
+          schema:
+            type: integer
+        - in: header
+          name: X-Alchemist-ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+    post:
+      parameters:
+        - in: header
+          name: X-Alchemist-ID
+          required: true
+          schema:
+            type: string
+      summary: Create a new potion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Potion'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Validation failed or Potion already exists
+  /potions/{code}:
+    get:
+      summary: Get potion by code
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+    put:
+      summary: Update a potion
+      parameters:
+        - in: header
+          name: X-Alchemist-ID
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Potion'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a potion
+      parameters:
+        - in: header
+          name: X-Alchemist-ID
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+        '500':
+          description: Not found or random explosion
+components:
+  schemas:
+    Potion:
+      type: object
+      properties:
+        code:
+          type: string
+          example: HLT
+        name:
+          type: string
+          example: Health Potion
+        powerLevel:
+          type: integer
+          example: 50
+        description:
+          type: string
+          example: A red healing elixir
